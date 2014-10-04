@@ -1,0 +1,13 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container" ui-view="">
+  <header>
+    <h1>{{crawl.title}}</h1>
+    <ul class="list-inline">
+      <li>{{crawl.location}}</li>
+      <li>{{crawl.bars.length}} bars</li>
+      <li>{{crawl.startDate}}</li>
+    </ul>
+    <p>{{crawl.description}}</p>
+  </header>
+</div>

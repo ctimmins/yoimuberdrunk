@@ -14,12 +14,12 @@ angular.module('drunkrawlApp')
         controller: 'CrawlPageCtrl'
       })
       .state('crawls.create', {
-        url: '/:id',
+        url: '/create',
         templateUrl: 'app/crawl/views/crawl-create.html',
-        controller: 'CrawlPageCtrl'
+        controller: 'CrawlCreateCtrl'
       });
   });
 
   // .state 'crawl' = list of crawls
-  //.state ' crawl.page' = individual crawl 
-  //. state 'crawl.create' = create crawl 
+  //.state ' crawl.page' = individual crawl
+  //. state 'crawl.create' = create crawl

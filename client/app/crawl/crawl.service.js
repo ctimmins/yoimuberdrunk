@@ -14,6 +14,18 @@ angular.module('drunkrawlApp')
     },
     getCrawl: function(id) {
       return Restangular.one('crawls', id).get();
+    },
+    addBar: function(id, bar) {
+      return Restangular.one('crawls', id).all('bars').post(bar);
+    },
+    removeBar: function(id, bar) {
+      return Restangular.one('crawls', id).one('bars', bar).delete();
+    },
+    getBar: function(id, bar) {
+      return  Restangular.one('crawls', id).one('bars', bar).get();
+    },
+    searchYelp: function(params) {
+      return Restangular.all('yelp').get();
     }
   };
 }]);
