@@ -42,6 +42,26 @@ exports.update = function(req, res) {
   });
 };
 
+exports.addBar = function(req, res) {
+
+};
+
+exports.getBars = function(req, res) {
+
+};
+
+exports.getBarInfo = function(req, res) {
+
+};
+
+exports.updateBar = function(req, res) {
+
+};
+
+exports.removeBar = function(req, res) {
+
+};
+
 // Deletes a crawl from the DB.
 exports.destroy = function(req, res) {
   Crawl.findById(req.params.id, function (err, crawl) {

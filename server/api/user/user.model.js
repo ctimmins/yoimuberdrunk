@@ -15,6 +15,14 @@ var UserSchema = new Schema({
   hashedPassword: String,
   provider: String,
   salt: String,
+  crawls: [{
+    crawl: { type: Schema.Types.ObjectId, ref: 'Crawl' },
+    isHost: Boolean,
+    dropOff: {
+      lat: String,
+      lon: String
+    }
+  }],
   facebook: {},
   twitter: {},
   github: {}

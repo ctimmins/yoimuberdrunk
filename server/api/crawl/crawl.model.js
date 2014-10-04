@@ -12,13 +12,21 @@ var CrawlSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User'
   }],
-  comments: [{body: String, date: Date}],
+  participants: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  comments: [{
+    text: String,
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    date: { type: Date, default: Date.now }
+  }],
   itinerary: [{
     bar: { type: Schema.Types.ObjectId, ref: 'Bar' },
     index: Number,
     active: { type: Boolean, default: true }
   }],
-  active: Boolean
+  active: { type: Boolean, default: false }
 });
 
 module.exports = mongoose.model('Crawl', CrawlSchema);
