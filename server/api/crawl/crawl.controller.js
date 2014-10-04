@@ -2,6 +2,15 @@
 
 var _ = require('lodash');
 var Crawl = require('./crawl.model');
+var config = require('../../config/environment');
+
+//Initialize yelp client
+var yelp = require("yelp").createClient({
+  consumer_key: config.yelp.consumer_key, 
+  consumer_secret: config.yelp.consumer_secret,
+  token: config.yelp.token,
+  token_secret: config.yelp.token_secret
+});
 
 // Get list of crawls
 exports.index = function(req, res) {
@@ -53,6 +62,11 @@ exports.destroy = function(req, res) {
     });
   });
 };
+
+//Use the Yelp API to return a list of bars and relevant information
+exports.yelpSearch = function(req, res) {
+
+}
 
 function handleError(res, err) {
   return res.send(500, err);
