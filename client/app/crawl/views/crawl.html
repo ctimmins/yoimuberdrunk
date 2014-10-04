@@ -1,0 +1,29 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+  <header class="row">
+    <div class="col-md-12">
+      <h2 class="page-header">Crawls</h2>
+      <nav ng-show="isLoggedIn()">
+        <ul class="list-inline">
+          <li><a ui-sref="crawls.create">Create a new crawl</a></li>
+          <li><a ui-sref="user.crawls">View your crawls</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div class="row">
+    <div class="col-md-8">
+      <h3>Browse crawls</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="list-unstyled">
+        <li ng-repeat="crawl in crawls">
+          <a ui-sref="crawls.page({ id: crawls._id })">{{crawl.title}}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

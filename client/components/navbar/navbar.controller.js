@@ -3,8 +3,8 @@
 angular.module('drunkrawlApp')
   .controller('NavbarCtrl', function ($scope, $location, Auth) {
     $scope.menu = [{
-      'title': 'Home',
-      'link': '/'
+      'title': 'Crawls',
+      'link': '/crawls'
     }];
 
     $scope.isCollapsed = true;
