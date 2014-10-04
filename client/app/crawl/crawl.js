@@ -3,17 +3,17 @@
 angular.module('drunkrawlApp')
   .config(function ($stateProvider) {
     $stateProvider
-      .state('crawl', {
+      .state('crawls', {
         url: '/crawls',
         templateUrl: 'app/crawl/views/crawl.html',
         controller: 'CrawlCtrl'
       })
-      .state('crawl.page', {
+      .state('crawls.page', {
         url: '/:id',
         templateUrl: 'app/crawl/views/crawl-page.html',
         controller: 'CrawlPageCtrl'
-      });
-      .state('crawl.create', {
+      })
+      .state('crawls.create', {
         url: '/:id',
         templateUrl: 'app/crawl/views/crawl-create.html',
         controller: 'CrawlPageCtrl'
