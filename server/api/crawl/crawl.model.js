@@ -6,12 +6,18 @@ var mongoose = require('mongoose'),
 var CrawlSchema = new Schema({
   name: String,
   description: String,
-  dateCreated: Date,
+  dateCreated: { type: Date, default: Date.now },
   dateHosted: Date,
-  hosts: [],
+  hosts: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }],
   comments: [{body: String, date: Date}],
-  itinerary: {},
-  info: String,
+  itinerary: [{
+    bar: { type: Schema.Types.ObjectId, ref: 'Bar' },
+    index: Number,
+    active: { type: Boolean, default: true }
+  }],
   active: Boolean
 });
 
