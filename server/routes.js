@@ -12,6 +12,7 @@ module.exports = function(app) {
   app.use('/api/crawls', require('./api/crawl'));
   app.use('/api/things', require('./api/thing'));
   app.use('/api/users', require('./api/user'));
+  app.use('/api/yelp', require('./api/yelp'))
 
   app.use('/auth', require('./auth'));
   
