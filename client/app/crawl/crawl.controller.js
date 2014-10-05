@@ -30,49 +30,14 @@ angular.module('drunkrawlApp')
   });
 
 angular.module('drunkrawlApp')
-  .controller('CrawlEditItinerary', function ($scope, $http, $state, toaster, Auth, Crawls, crawl) {
+  .controller('CrawlEditItinerary', function ($scope, $http, $state, toaster, Auth, Crawls, crawl, leafletData) {
     $scope.crawl = crawl;
 
     console.log($scope.crawl);
 
     $scope.crawl.selection = [];
 
-    L.Icon.Default.imagePath = '/assets/images/leaflet';
-    var map = new L.Map('map', {center: new L.LatLng(39.095962936305504, -96.8115234375), zoom: 14});
-    var markers = L.markerClusterGroup({ singleMarkerMode: true});
-    var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-    var ggl = new L.Google('ROADMAP');
-    map.addLayer(ggl);
-    map.addControl(new L.Control.Layers( {'OSM':osm, 'Google':ggl}, {}));
-
-    var mapFeatures = {
-      navOptions: {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 2000
-      },
-
-      initialize: function() {
-        map.on('zoomend', function(event) {
-          mapFeatures.zoomChange(event);
-        });
-        //mapFeatures.getCurrentLocation();
-      },
-
-      trackLocation: function() {
-        $scope.watchId = navigator.geolocation.watchPosition(onSuccess, onError, navOptions)
-
-        function onSuccess(location) {
-          var lat = location.coords.latitude;
-          var lng = location.coords.longitude;
-          var latlng = L.latlng(lat, lng);
-          map.panTo(latlng);
-        }
-
-        function onError(error){
-          alert('Error with Map');
-=======
-   angular.extend($scope, {
+    angular.extend($scope, {
       defaults: {
         tileLayer: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         maxZoom: 18,
@@ -98,11 +63,10 @@ angular.module('drunkrawlApp')
           }
         }
       },
-      bounds: bounds
     });
 
    //--------------------------------------------------------//
-   //------------------  Map Event Handling  -----------------//
+   //---------------Map Event Handling and Function----------//
    //--------------------------------------------------------//
 
     //on map load
@@ -113,9 +77,10 @@ angular.module('drunkrawlApp')
     });
     console.log(leafletDirectiveMap)
 
-    $scope.$on("leafletDirectiveMap.move", function(event, args){
-       //console.log($scope.markers);
-       console.log($scope.center);
+    //on map zoom or slide
+    $scope.$on("leafletDirectiveMap.moveend", function(event, args){
+      $scope.currentMapBounds = getCurrentMapBounds();
+      var bars = findNearbyBars($scope.currentMapBounds);
     });
     $scope.$on("leafletDirectiveMap.click", function(event, args){
       console.log(event);
@@ -124,7 +89,25 @@ angular.module('drunkrawlApp')
     $scope.crawl = crawl;
     $scope.crawl.selection = [];
 
-    $scope.findNearbyBars = function(){}
+    function getCurrentMapBounds(){
+      leafletData.getMap().then(function(map){
+        return map.getBounds();
+      });
+    }
+
+    function findNearbyBars(bounds){
+      sw_lat = bounds._southWest.lat,
+      sw_lng = bounds._southWest.lng,
+      ne_lat = bounds._northEast.lat,
+      ne_lng = bounds._northEast.lng,
+      params = {};
+      params.bounds = sw_lat+','+sw_lng+'|'+ne_lat+','+ne_lng;
+      params.term = "bars"
+      Crawls.searchYelp(params).then(function(res){
+        $scope.results = res.businesses;
+        return res;
+      });
+    }
 
 //<<---------------------END MAP FUNCTIONS---------------------->>//
 
