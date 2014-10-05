@@ -5,6 +5,10 @@ angular.module('drunkrawlApp')
     $scope.menu = [{
       'title': 'Crawls',
       'link': '/crawls/explore'
+    },
+    {
+      'title': 'Bars',
+      'link': '/bars/explore'
     }];
 
     $scope.isCollapsed = true;
