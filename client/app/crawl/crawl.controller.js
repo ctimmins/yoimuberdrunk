@@ -65,6 +65,11 @@ angular.module('drunkrawlApp')
       },
     });
 
+    $scope.markers = new Array();
+    //-----color table-----//
+    
+
+ 
    //--------------------------------------------------------//
    //---------------Map Event Handling and Function----------//
    //--------------------------------------------------------//
@@ -81,6 +86,13 @@ angular.module('drunkrawlApp')
     $scope.$on("leafletDirectiveMap.moveend", function(event, args){
       $scope.currentMapBounds = getCurrentMapBounds();
       var bars = findNearbyBars($scope.currentMapBounds);
+      bars.businesses.foreach(function(bar){
+        $scope.markers.push({
+            lat: bar.,
+            lng: leafEvent.latlng.lng,
+            message: "My Added Marker"
+        });
+      })
     });
     $scope.$on("leafletDirectiveMap.click", function(event, args){
       console.log(event);
