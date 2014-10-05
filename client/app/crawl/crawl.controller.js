@@ -51,18 +51,6 @@ angular.module('drunkrawlApp')
         autoDiscover: true,
         zoom: 12
       },
-      markers: {
-        m1: {
-          lat: 50,
-          lng: 0,
-          icon: {
-            type: 'markerAwesome',
-            icon: 'beer',
-            markerColor: 'red',
-            iconColor: '#FFFFFF'
-          }
-        }
-      },
     });
 
     $scope.markers = new Array();
@@ -77,15 +65,17 @@ angular.module('drunkrawlApp')
 
     //on map load
     $scope.$on("leafletDirectiveMap.load", function(event, args){
-      $scope.markers.m1.lat = args.leafletEvent.target.getCenter().lat;
-      $scope.markers.m1.lng = args.leafletEvent.target.getCenter().lng;
+      $scope.markers.lat = args.leafletEvent.target.getCenter().lat;
+      $scope.markers.lng = args.leafletEvent.target.getCenter().lng;
       console.log("clicked!");
     });
 
     //on map zoom or slide
     $scope.$on("leafletDirectiveMap.moveend", function(event, args){
-      var bars = getCurrentMapBounds();
-      bars.businesses.foreach(function(bar){
+      getCurrentMapBounds().then(function(bars){
+        bars.businesses.forEach(function(bar){
+          if (!bar.location.coordinate) return;
+          console.log(bar);
         $scope.markers.push({
             lat: bar.location.coordinate.latitude,
             lng: bar.location.coordinate.longitude,
@@ -100,6 +90,8 @@ angular.module('drunkrawlApp')
             }
         });
       });
+      });
+      
     });
     $scope.$on("leafletDirectiveMap.click", function(event, args){
       console.log(event);
@@ -109,8 +101,9 @@ angular.module('drunkrawlApp')
     $scope.crawl.selection = [];
 
     function getCurrentMapBounds(){
-      leafletData.getMap().then(function(map) {
-        findNearbyBars(map.getBounds());
+
+      return leafletData.getMap().then(function(map) {
+        return findNearbyBars(map.getBounds());
       });
     }
 
@@ -122,7 +115,7 @@ angular.module('drunkrawlApp')
           params = {};
       params.bounds = sw_lat+','+sw_lng+'|'+ne_lat+','+ne_lng;
       params.term = "bars"
-      Crawls.searchYelp(params).then(function(res){
+      return Crawls.searchYelp(params).then(function(res){
         $scope.results = res.businesses;
         return res;
       });
