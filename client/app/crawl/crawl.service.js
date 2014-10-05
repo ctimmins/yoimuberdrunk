@@ -22,7 +22,10 @@ angular.module('drunkrawlApp')
       return Restangular.one('crawls', id).one('bars', bar).delete();
     },
     getBar: function(id, bar) {
-      return  Restangular.one('crawls', id).one('bars', bar).get();
+      return Restangular.one('crawls', id).one('bars', bar).get();
+    },
+    getBarYelpID: function(id, bar_id) {
+      return Restangular.one('crawls', id).one('bars', bar_id).get();
     },
     searchYelp: function(params) {
       return Restangular.all('yelp').customGET('search', params);

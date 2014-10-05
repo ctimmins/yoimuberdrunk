@@ -21,11 +21,10 @@ var CrawlSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     date: { type: Date, default: Date.now }
   }],
-  itinerary: [{
-    bar: { type: Schema.Types.ObjectId, ref: 'Bar' },
-    index: Number,
-    active: { type: Boolean, default: true }
+  bars: [{
+    type: Schema.Types.ObjectId, ref: 'Bar'
   }],
+  active_bar: { type: Schema.Types.ObjectId, ref: 'User' },
   active: { type: Boolean, default: false }
 });
 

@@ -48,25 +48,25 @@ exports.update = function(req, res) {
 exports.addBar = function(req, res) {
   for(bar in req.body.bars){
     Bar.findOne({ id: bar.id }, function(err, bar) {
-      if (err) { 
-        return handleError(res, err); 
+      if (err) {
+        return handleError(res, err);
       }
       if (!bar) {
         Bar.create(bar, function(err, bar) {
-          if (err) { 
-            return handleError(res, err); 
+          if (err) {
+            return handleError(res, err);
           }
           Crawl.findByIdAndUpdate(req.params.id, { $push: { itinerary: { bar: bar._id } } }, function(err, crawl) {
-            if (err) { 
-              return handleError(res, err); 
+            if (err) {
+              return handleError(res, err);
             }
           });
         });
-      } 
+      }
       else {
         Crawl.findByIdAndUpdate(req.params.id, { $push: { itinerary: { bar: bar.bar_id, } } }, function(err, crawl) {
-          if (err) { 
-            return handleError(res, err); 
+          if (err) {
+            return handleError(res, err);
           }
         });
       }
@@ -75,16 +75,33 @@ exports.addBar = function(req, res) {
 };
 
 exports.getBars = function(req, res) {
+<<<<<<< HEAD
 
   Crawl.findById(req.params.id, function(err, crawl)
         .populate('itinerary.bar')
         .exec(function (err, crawl){
           return res.json(200, crawl);
         });       
+=======
+  Crawl.findById(req.params.id).populate('bars')
+    .exec(function(err, crawl) {
+    if(err) { return handleError(res, err); }
+    if(!bars) { return res.json(404, res); }
+    return res.json(200, bars);
+  });
+>>>>>>> a314831dd563949cb4d14f5322cc56155f6f85e5
 };
 
-exports.getBarInfo = function(req, res) {
-  //Bar.findById()
+exports.getBarByYelpID = function(req, res) {
+  Crawl.findById(req.params.id).populate('bars')
+    .exec(function(err, crawl) {
+      if(err) { return handleError(res, err); }
+      if(!crawl) { return res.json(404, res); }
+      var query = _.find(crawl.bars, function(bar) {
+        return bar.id = req.params.bar_id;
+      });
+      return res.json(200, query);
+    });
 };
 
 exports.updateBar = function(req, res) {

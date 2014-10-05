@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('drunkrawlApp')
-.directive('btnCrawlAction', ['Crawls', 'Auth', 'toaster', function(Crawls, Auth, toaster) {
+.directive('btnCrawlAction', ['Crawls', 'Bars', 'Auth', 'toaster', function(Crawls, Bars, Auth, toaster) {
   return {
     restrict: 'A',
     scope: {
@@ -16,10 +16,11 @@ angular.module('drunkrawlApp')
       scope.btn.class = 'btn-success';
       scope.btn.icon = 'glyphicon-plus'
       scope.btn.text = 'Add to crawl';
+      scope.inCollection = false;
       scope.inCrawl = false;
 
-      Crawls.checkBar(crawl._id, bar._id).then(function(res) {
-        if(res && !res.error) {
+      Crawls.getBarYelpID(crawl._id, bar.id).then(function(res) {
+        if(res) {
           scope.btn.text = 'In crawl';
           scope.btn.icon = 'glyphicon-ok';
           scope.inCrawl = true;
@@ -60,16 +61,40 @@ angular.module('drunkrawlApp')
               }
             });
           } else {
-            Crawls.addBar(game._id, bar._id).then(function(res) {
-              if(res && !res.error) {
-                toaster.pop('success', 'Nice, add bar', 'You just added ' + scope.bar.name);
-                scope.inCrawl = true;
-                scope.btn.class = 'btn-success';
-                scope.btn.icon = 'glyphicon-ok';
-                scope.btn.text = 'In crawl';
-                scope.crawl.selection.push(bar);
+            Bars.checkBarById(bar.id).then(function(res) {
+              if(res) {
+                scope.inCollection = true;
+                Crawls.addBar(crawl._id, bar._id).then(function(res) {
+                  if(res && !res.error) {
+                    toaster.pop('success', 'Nice, add bar', 'You just added ' + scope.bar.name);
+                    scope.inCrawl = true;
+                    scope.btn.class = 'btn-success';
+                    scope.btn.icon = 'glyphicon-ok';
+                    scope.btn.text = 'In crawl';
+                    scope.crawl.selection.push(bar);
+                  } else {
+                    toaster.pop('error', 'Oops! There was an issue', res.error.message);
+                  }
+                });
               } else {
-                toaster.pop('error', 'Oops! There was an issue', res.error.message);
+                Bars.create(bar).then(function(res) {
+                  if(res && !res.error) {
+                    Crawls.addBar(crawl._id, res._id).then(function(res) {
+                      if(res && !res.error) {
+                        toaster.pop('success', 'Nice, add bar', 'You just added ' + scope.bar.name);
+                        scope.inCrawl = true;
+                        scope.btn.class = 'btn-success';
+                        scope.btn.icon = 'glyphicon-ok';
+                        scope.btn.text = 'In crawl';
+                        scope.crawl.selection.push(bar);
+                      } else {
+                        toaster.pop('error', 'Oops! There was an issue', res.error.message);
+                      }
+                    });
+                  } else {
+                    toaster.pop('error', 'Oops! There was an issue', res.error.message);
+                  }
+                });
               }
             });
           }
