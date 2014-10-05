@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var Crawl = require('./crawl.model');
+var Bar = require('../bar/bar.model');
 
 // Get list of crawls
 exports.index = function(req, res) {
@@ -22,6 +23,7 @@ exports.show = function(req, res) {
 
 // Creates a new crawl in the DB.
 exports.create = function(req, res) {
+  console.log(req.body);
   Crawl.create(req.body, function(err, crawl) {
     if(err) { return handleError(res, err); }
     return res.json(201, crawl);
@@ -43,11 +45,48 @@ exports.update = function(req, res) {
 };
 
 exports.addBar = function(req, res) {
-
+  for(bar in req.body.bars){
+    Bar.findOne({ id: bar.id }, function(err, bar) {
+      if (err) { 
+        return handleError(res, err); 
+      }
+      if (!bar) {
+        Bar.create(bar, function(err, bar) {
+          if (err) { 
+            return handleError(res, err); 
+          }
+          Crawls.findByIdAndUpdate(req.params.id, { $push: { itinerary: { bar: bar._id } } }, function(err, crawl) {
+            if (err) { 
+              return handleError(res, err); 
+            }
+          });
+        });
+      } 
+      else {
+        Crawls.findByIdAndUpdate(req.params.id, { $push: { itinerary: { bar: bar.bar_id, } } }, function(err, crawl) {
+          if (err) { 
+            return handleError(res, err); 
+          }
+        });
+      }
+    });
+  }
 };
 
 exports.getBars = function(req, res) {
+  // Crawls.findById(req.params.id, function(err, crawl) {
+  //   crawl.populate(itinerary.bar, {path: 'itinerary.bar', model: 'Bar'}, function(err, bar){
 
+  //   });
+  // });
+  // Crawls.findById(req.params.id, function(err, crawl)
+  //       .populate('itinerary.bar')
+  //       .exec(function (err, crawl){
+  //         console.log(crawl.itinerary[0].bar.name)
+  //       });
+    
+
+        
 };
 
 exports.getBarInfo = function(req, res) {

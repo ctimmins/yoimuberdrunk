@@ -23,6 +23,8 @@ var UserSchema = new Schema({
       lon: String
     }
   }],
+  uber_access_token: String,
+  uber_refresh_token: String,
   facebook: {},
   twitter: {},
   github: {}

@@ -60,6 +60,14 @@ var all = {
     token_secret: process.env.YELP_TOKEN_SECRET || 'token_secret'
   },
 
+  uber: {
+    client_id: process.env.UBER_CLIENT_ID || 'id',
+    uber_secret: process.env.UBER_SECRET || 'secret',
+    server_token:  process.env.UBER_SERVER_TOKEN || 'server_token',
+    redirect_uri:  process.env.UBER_REDIRECT_URI || 'redirect_uri',
+    name: "Yo! I'm Drunk"
+  }
+
 };
 
 // Export the config object based on the NODE_ENV
