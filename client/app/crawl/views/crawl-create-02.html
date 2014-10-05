@@ -33,8 +33,8 @@
   </div>
   <div class="col-md-4">
     <h4>Crawl selection</h4>
-    <ul class="list-unstyled list-crawl-selection">
-      <li class="selection-bar" data-drag="true" jqyoui-draggable data-jqyoui-options="{handle: 'span'}" ng-repeat="bar in crawl.selection">
+    <ul class="list-unstyled list-crawl-selection" data-drop="true" data-jqyoui-options="{handle: 'span'}" jqyoui-droppable>
+      <li class="selection-bar" data-drag="true" jqyoui-draggable data-jqyoui-options ng-repeat="bar in crawl.selection">
         <div class="pull-left">
           <!-- {{crawl.selection.indexOf(bar)}} -->
         </div>
