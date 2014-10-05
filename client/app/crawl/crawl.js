@@ -13,6 +13,16 @@ angular.module('drunkrawlApp')
         templateUrl: 'app/crawl/views/crawl-index.html',
         controller: 'CrawlCtrl'
       })
+      .state('crawls.page', {
+        url: '/:id',
+        templateUrl: 'app/crawl/views/crawl-page.html',
+        controller: 'CrawlPageCtrl',
+        resolve: {
+          crawl: function($stateParams, Crawls) {
+            return Crawls.getCrawl($stateParams.id);
+          }
+        }
+      })
       .state('crawls.create', {
         url: '/create',
         templateUrl: 'app/crawl/views/crawl-create-01.html',
@@ -25,16 +35,6 @@ angular.module('drunkrawlApp')
         resolve: {
           crawl: function($stateParams, Crawls) {
             console.log($stateParams);
-            return Crawls.getCrawl($stateParams.id);
-          }
-        }
-      })
-      .state('crawls.page', {
-        url: '/:id',
-        templateUrl: 'app/crawl/views/crawl-page.html',
-        controller: 'CrawlPageCtrl',
-        resolve: {
-          crawl: function($stateParams, Crawls) {
             return Crawls.getCrawl($stateParams.id);
           }
         }

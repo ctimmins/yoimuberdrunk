@@ -12,6 +12,9 @@ angular.module('drunkrawlApp')
     getCrawls: function() {
       return Restangular.all('crawls').getList();
     },
+    getSortedCrawls: function(query) {
+      return Restangular.all('crawls').getList(query);
+    },
     getCrawl: function(id) {
       return Restangular.one('crawls', id).get();
     },
@@ -26,6 +29,15 @@ angular.module('drunkrawlApp')
     },
     checkBar: function(id, bar) {
       return Restangular.one('crawls', id).one('check', bar).get();
+    },
+    getParticipants: function(id) {
+      return Restangular.one('crawls', id).all('participants').getList();
+    },
+    addParticipant: function(id, user) {
+      return Restangular.one('crawls', id).all('participants').post(user);
+    },
+    removeParticipant: function(id, user_id) {
+      return Restangular.one('crawls', id).one('participants', user_id).remove();
     },
     searchYelp: function(params) {
       return Restangular.all('yelp').customGET('search', params);

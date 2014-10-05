@@ -10,12 +10,13 @@ angular.module('drunkrawlApp')
 
 angular.module('drunkrawlApp')
   .controller('CrawlCreateCtrl', function ($scope, $http, $state, toaster, Auth, Crawls) {
+    var user = Auth.getCurrentUser();
     $scope.isLoggedIn = Auth.isLoggedIn();
     $scope.crawl = {};
 
     $scope.createCrawl = function(data) {
+      data.hosts = user._id;
       Crawls.create(data).then(function(res) {
-        console.log(res);
         if(res && !res.error) {
           $scope.addingBars = true;
           $scope.crawl._id = res._id;
@@ -31,9 +32,10 @@ angular.module('drunkrawlApp')
 angular.module('drunkrawlApp')
   .controller('CrawlEditItinerary', function ($scope, $http, $state, toaster, Auth, Crawls, crawl) {
     $scope.crawl = crawl;
-    $scope.crawl.selection = [];
 
     console.log($scope.crawl);
+
+    $scope.crawl.selection = [];
 
     L.Icon.Default.imagePath = '/assets/images/leaflet';
     var map = new L.Map('map', {center: new L.LatLng(39.095962936305504, -96.8115234375), zoom: 14});
@@ -50,17 +52,17 @@ angular.module('drunkrawlApp')
         maximumAge: 2000
       },
 
-      initialize: function(){
+      initialize: function() {
         map.on('zoomend', function(event) {
           mapFeatures.zoomChange(event);
         });
-        mapFeatures.getCurrentLocation();
+        //mapFeatures.getCurrentLocation();
       },
 
-      trackLocation: function(){
+      trackLocation: function() {
         $scope.watchId = navigator.geolocation.watchPosition(onSuccess, onError, navOptions)
 
-        function onSuccess(location){
+        function onSuccess(location) {
           var lat = location.coords.latitude;
           var lng = location.coords.longitude;
           var latlng = L.latlng(lat, lng);
@@ -72,12 +74,11 @@ angular.module('drunkrawlApp')
         }
       },
 
-      stopTrackingLocation: function(){
+      stopTrackingLocation: function() {
         navigator.geolocation.clearWatch($scope.watchId);
       },
 
-      zoomChange: function(e){
-        console.log(e);
+      zoomChange: function(e) {
         var bounds = e.target.getBounds(),
             zoom = e.target.getBoundsZoom(bounds),
             sw_lat = bounds._southWest.lat,
@@ -85,7 +86,6 @@ angular.module('drunkrawlApp')
             ne_lat = bounds._northEast.lat,
             ne_lng = bounds._northEast.lng,
             params = {};
-            console.log(bounds);
         params.bounds = sw_lat+','+sw_lng+'|'+ne_lat+','+ne_lng;
         params.term = "bars"
         console.log(params);

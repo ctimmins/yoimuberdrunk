@@ -6,8 +6,17 @@ var Bar = require('../bar/bar.model');
 
 // Get list of crawls
 exports.index = function(req, res) {
-  Crawl.find(function (err, crawls) {
+  Crawl.find( function (err, crawls) {
     console.log(crawls);
+    if(err) { return handleError(res, err); }
+    return res.json(200, crawls);
+  });
+};
+
+// Get list of crawls sorted
+exports.indexSort = function(req, res) {
+  Crawl.find().sort({ participants: req.query.participants, dateCreated: req.query.dateCreated })
+    .exec(function (err, crawls) {
     if(err) { return handleError(res, err); }
     return res.json(200, crawls);
   });
@@ -24,7 +33,6 @@ exports.show = function(req, res) {
 
 // Creates a new crawl in the DB.
 exports.create = function(req, res) {
-  console.log(req.body);
   Crawl.create(req.body, function(err, crawl) {
     if(err) { return handleError(res, err); }
     return res.json(201, crawl);
@@ -48,6 +56,60 @@ exports.update = function(req, res) {
 exports.addBar = function(req, res) {
   Crawl.findByIdAndUpdate(req.params.id, { $push: { bars: { bar: req.body._id } } },
     function(err, crawl) {
+      if(err) { return handleError(res, err); }
+      if(!crawl) { return res.send(404); }
+      return res.json(200, crawl);
+    });
+};
+
+exports.addParticipant = function(req, res) {
+  Crawl.findByIdAndUpdate(req.params.id, { $push: { participants: req.body._id } },
+    function(err, crawl) {
+      if(err) { return handleError(res, err); }
+      if(!crawl) { return res.send(404); }
+      return res.json(200, crawl);
+    });
+};
+
+exports.removeParticipant = function(req, res) {
+  Crawl.findByIdAndUpdate(req.params.id, { $pull: { participants: req.body._id } },
+    function(err, crawl) {
+      if(err) { return handleError(res, err); }
+      if(!crawl) { return res.send(404); }
+      return res.json(200, crawl);
+    });
+};
+
+exports.getParticipants = function(req, res) {
+  Crawl.findById(req.params.id).populate('participants')
+    .exec(function(err, crawl) {
+      if(err) { return handleError(res, err); }
+      if(!crawl) { return res.send(404); }
+      return res.json(200, crawl);
+    });
+};
+
+exports.addHost = function(req, res) {
+  Crawl.findByIdAndUpdate(req.params.id, { $push: { hosts: req.body.user._id } },
+    function(err, crawl) {
+      if(err) { return handleError(res, err); }
+      if(!crawl) { return res.send(404); }
+      return res.json(200, crawl);
+    });
+};
+
+exports.removeHost = function(req, res) {
+  Crawl.findByIdAndUpdate(req.params.id, { $pull: { hosts: req.body.user._id } },
+    function(err, crawl) {
+      if(err) { return handleError(res, err); }
+      if(!crawl) { return res.send(404); }
+      return res.json(200, crawl);
+    });
+};
+
+exports.getHosts = function(req, res) {
+  Crawl.findById(req.params.id).populate('hosts')
+    .exec(function(err, crawl) {
       if(err) { return handleError(res, err); }
       if(!crawl) { return res.send(404); }
       return res.json(200, crawl);
