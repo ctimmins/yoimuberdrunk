@@ -5,8 +5,9 @@ var controller = require('./uber.controller');
 
 var router = express.Router();
 
-router.get('/user/:id', controller.authorize);
-router.get('/callback', controller.callback);
-// router.get('/callback/update', controller.updateUser);
+router.get('/products', controller.products);
+router.get('/estimates/price', controller.priceEstimate);
+router.get('/estimates/time', controller.timeEstimate);
+
 
 module.exports = router;
