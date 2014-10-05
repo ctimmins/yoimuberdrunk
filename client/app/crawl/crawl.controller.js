@@ -71,41 +71,62 @@ angular.module('drunkrawlApp')
 
         function onError(error){
           alert('Error with Map');
+=======
+   angular.extend($scope, {
+      defaults: {
+        tileLayer: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        maxZoom: 18,
+        path: {
+            weight: 10,
+            color: '#800000',
+            opacity: 1
         }
       },
-
-      stopTrackingLocation: function() {
-        navigator.geolocation.clearWatch($scope.watchId);
+      center: {
+        autoDiscover: true,
+        zoom: 12
       },
-
-      zoomChange: function(e) {
-        var bounds = e.target.getBounds(),
-            zoom = e.target.getBoundsZoom(bounds),
-            sw_lat = bounds._southWest.lat,
-            sw_lng = bounds._southWest.lng,
-            ne_lat = bounds._northEast.lat,
-            ne_lng = bounds._northEast.lng,
-            params = {};
-        params.bounds = sw_lat+','+sw_lng+'|'+ne_lat+','+ne_lng;
-        params.term = "bars"
-        console.log(params);
-        Crawls.searchYelp(params).then(function(res) {
-          console.log(res);
-          if(res && !res.error) {
-            for(var i = 0; i < res.businesses.length; i++) {
-              if(res.businesses[i].location.coordinate) {
-                var m = L.marker({ lat: res.businesses[i].location.coordinate.latitude, lng: res.businesses[i].location.coordinate.longitude, name: res.businesses[i].name });
-                markers.addLayer(m);
-              }
-            }
-            m.addTo(map);
-          } else {
-            toaster.pop('error', 'Oops! There was an issue', res.error.message);
+      markers: {
+        m1: {
+          lat: 50,
+          lng: 0,
+          icon: {
+            type: 'markerAwesome',
+            icon: 'beer',
+            markerColor: 'red',
+            iconColor: '#FFFFFF'
           }
-        });
-      }
-    };
-    mapFeatures.initialize();
+        }
+      },
+      bounds: bounds
+    });
+
+   //--------------------------------------------------------//
+   //------------------  Map Event Handling  -----------------//
+   //--------------------------------------------------------//
+
+    //on map load
+    $scope.$on("leafletDirectiveMap.load", function(event, args){
+      $scope.markers.m1.lat = args.leafletEvent.target.getCenter().lat;
+      $scope.markers.m1.lng = args.leafletEvent.target.getCenter().lng;
+      console.log("clicked!");
+    });
+    console.log(leafletDirectiveMap)
+
+    $scope.$on("leafletDirectiveMap.move", function(event, args){
+       //console.log($scope.markers);
+       console.log($scope.center);
+    });
+    $scope.$on("leafletDirectiveMap.click", function(event, args){
+      console.log(event);
+      console.log(args);
+    })
+    $scope.crawl = crawl;
+    $scope.crawl.selection = [];
+
+    $scope.findNearbyBars = function(){}
+
+//<<---------------------END MAP FUNCTIONS---------------------->>//
 
     $scope.complete = function() {
       var bar;
@@ -153,7 +174,7 @@ angular.module('drunkrawlApp')
       toaster.pop('success', 'Nice! You just added some bars to the crawl', 'Added ' + $scope.crawl.selection.length + ' bars to ' + $scope.crawl.name);
       $state.go('crawl.page', { id: crawl._id }, { reload: true });
     };
-  })
+  });
 
 angular.module('drunkrawlApp')
   .controller('CrawlPageCtrl', function ($scope, $http, Auth, toaster, Crawls, crawl) {
