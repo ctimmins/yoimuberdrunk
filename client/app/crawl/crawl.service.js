@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('drunkrawlApp')
-.factory('Crawls', ['Restangular', function(Restangular) {
+.factory('Crawls', function(Restangular) {
   return {
     create: function(data) {
       return Restangular.all('crawls').post(data);
@@ -25,7 +25,7 @@ angular.module('drunkrawlApp')
       return  Restangular.one('crawls', id).one('bars', bar).get();
     },
     searchYelp: function(params) {
-      return Restangular.all('yelp').get();
+      return Restangular.all('yelp').customGET('search', params);
     }
   };
-}]);
+});
