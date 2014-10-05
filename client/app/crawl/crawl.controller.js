@@ -71,15 +71,14 @@ angular.module('drunkrawlApp')
 
         function onError(error){
           alert('Error with Map');
-=======
-   angular.extend($scope, {
+    angular.extend($scope, {
       defaults: {
         tileLayer: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         maxZoom: 18,
         path: {
-            weight: 10,
-            color: '#800000',
-            opacity: 1
+          weight: 10,
+          color: '#800000',
+          opacity: 1
         }
       },
       center: {
@@ -102,7 +101,7 @@ angular.module('drunkrawlApp')
     });
 
    //--------------------------------------------------------//
-   //------------------  Map Event Handling  -----------------//
+   //------------------  Map Event Handling  ----------------//
    //--------------------------------------------------------//
 
     //on map load
