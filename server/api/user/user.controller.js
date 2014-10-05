@@ -21,6 +21,18 @@ exports.index = function(req, res) {
 };
 
 /**
+ * Get list of user's crawls
+ */
+exports.getCrawls = function(req, res) {
+  User.findById(req.params.id, '-salt -hashedPassword').populate('crawls')
+    .exec( function (err, user) {
+      if(err) return res.send(500, err);
+      if(!user) return res.send(404);
+      res.json(200, user.crawls);
+    });
+};
+
+/**
  * Creates a new user
  */
 exports.create = function (req, res, next) {

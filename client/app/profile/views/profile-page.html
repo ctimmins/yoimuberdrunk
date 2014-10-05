@@ -1,0 +1,34 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <header>
+        <h1>{{profile.name}}</h1>
+        <ul class="list-inline">
+          <li>{{profile.crawls.length}} crawls</li>
+          <li>Crawling since {{profile.dateJoined | date:'medium'}}</li>
+        </ul>
+      </header>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <h3>Crawls</h3>
+      <div class="profile-content">
+        <ul class="list-unstyled list-crawls">
+          <li class="list-crawl" ui-router="crawl.page({ id: crawl._id })" ng-repeat="crawl in profile.crawls">
+            <h3 class="crawl-name">{{crawl.name}}</h3>
+            <ul class="list-inline crawl-stats">
+              <li>{{crawl.participants.length}} participants</li>
+            </ul>
+            <p class="crawl-description">{{crawl.description}}</p>
+            <ul class="list-inline crawl-categories">
+              <li class="category" ng-repeat="category in crawl.categories">{{category.tite}}</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

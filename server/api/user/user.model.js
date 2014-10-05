@@ -16,13 +16,9 @@ var UserSchema = new Schema({
   provider: String,
   salt: String,
   crawls: [{
-    crawl: { type: Schema.Types.ObjectId, ref: 'Crawl' },
-    isHost: Boolean,
-    dropOff: {
-      lat: String,
-      lon: String
-    }
+    type: Schema.Types.ObjectId, ref: 'Crawl'
   }],
+  dateJoined: { type: Date, default: Date.now },
   uber_access_token: String,
   uber_refresh_token: String,
   facebook: {},
@@ -50,7 +46,10 @@ UserSchema
   .get(function() {
     return {
       'name': this.name,
-      'role': this.role
+      'role': this.role,
+      '_id': this._id,
+      'crawls': this.crawls,
+      'dateJoined': this.dateJoined
     };
   });
 
