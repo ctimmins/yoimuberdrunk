@@ -5,51 +5,60 @@ var User = require('../user/user.model');
 var request = require('request');
 var querystring = require('querystring');
 
-var	client_id = config.uber.client_id,
-	client_secret = config.uber.uber_secret,
-	server_token = config.uber.server_token,
-	redirect_uri = config.uber.redirect_uri,
-	name = config.uber.name,
-	scope = "",
-	authorize_url = 'https://login.uber.com/oauth/authorize',
-  access_token_url = 'https://login.uber.com/oauth/token';
+var server_token = config.uber.server_token;
+var client_id = config.uber.client_id;
+var baseUrl = 'https://api.uber.com/v1/';
 
-exports.authorize = function(req, res){
-	var userId = req.params.id;
-	// res.redirect(authorize_url +
-	// 	querystring.stringify({
- //      response_type: 'code',
- //      client_id: client_id,
- //      scope: scope,
- //      state: userId,
- //      redirect_uri: redirect_uri
- //    });
- //  );
-}
-
-exports.callback = function(req, res){
-	var code = req.query.code;
-	var userId = req.query.state;
-
-	var authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    form: {
-      code: code,
-      redirect_uri: redirect_uri,
-      grant_type: 'authorization_code',
-      client_id: client_id,
-      client_secret: client_secret
-    },
-    json: true
-  };
-
-  request.post(authOptions, function(error, response, body) {
-  	if(!error && response.statusCode === 200) {
-  		var access_token = body.access_token,
-  			refresh_token = body.refresh_token;
-  			User.findByIdAndUpdate(userId, {uber_access_token: access_token, uber_refresh_token: refresh_token});
-  	}
+exports.products = function(req,res){
+  var lat = req.query.lat,
+      lng = req.query.lng;
+  var qsdata = {"latitude": lat, "longitude": lng}
+  var options = {url: baseUrl+'products',
+                 qs: qsdata,
+                 headers: {Authorization: "Token "+server_token}
+               }
+  request.get(options, function(e,r,body){
+    res.json(body);
   });
+};
+
+exports.priceEstimate = function(req, res){
+  var qsdata = {
+    "start_latitude": req.query.slat,
+    "start_longitude": req.query.slng,
+    "end_latitude": req.query.elat,
+    "end_longitude": req.query.elng
+  }
+  //res.json(qsdata);
+  var options = {url: baseUrl+'estimates/price',
+                 qs: qsdata,
+                 headers: {Authorization: "Token "+server_token}
+               }
+  request.get(options, function(e,r,body){
+    if(e) return handleError(e, r);
+    if(!body) { return res.send(404); }
+    return res.json(200, body);
+  });
+
+};
+
+exports.timeEstimate = function(req,res){
+  var qsdata = {
+    "start_latitude": req.query.slat,
+    "start_longitude": req.query.slng
+  }
+  var options = {url: baseUrl+'estimates/time',
+                 qs: qsdata,
+                 headers: {Authorization: "Token "+server_token}
+               }
+  request.get(options, function(e,r,body){
+    if(e) return handleError(e, r);
+    if(!body) { return res.send(404); }
+    return res.json(200, body);
+  });
+
+};
+
+function handleError(res, err) {
+  return res.json(500, err);
 }
-
-

@@ -89,14 +89,16 @@ angular.module('drunkrawlApp')
         Crawls.searchYelp(params).then(function(res) {
           console.log(res);
           if(res && !res.error) {
+            var coords = [];
             for(var i = 0; i < res.businesses.length; i++) {
               if(res.businesses[i].location.coordinate) {
-                var m = L.marker({ lat: res.businesses[i].location.coordinate.latitude, lng: res.businesses[i].location.coordinate.longitude, name: res.businesses[i].name });
-                markers.addLayer(m);
+                var m = L.marker({ lat: res.businesses[i].location.coordinate.latitude, lng: res.businesses[i].location.coordinate.longitude, title: res.businesses[i].name });
+                m.addTo(map);
+                coords.push(m.getLatLng());
               }
             }
             map.addLayer(markers);
-            map.fitBounds(markers.getBounds());
+            map.fitBounds(new L.latLngBounds(coords));
           } else {
             toaster.pop('error', 'Oops! There was an issue', res.error.message);
           }
