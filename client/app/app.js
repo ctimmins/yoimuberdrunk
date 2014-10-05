@@ -10,7 +10,8 @@ angular.module('drunkrawlApp', [
   'ui.bootstrap',
   'restangular',
   'toaster',
-  'leaflet-directive'
+  'leaflet-directive',
+  'ngDragDrop'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, RestangularProvider) {
     $urlRouterProvider

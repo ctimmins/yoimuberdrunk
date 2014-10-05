@@ -16,15 +16,15 @@ var	client_id = config.uber.client_id,
 
 exports.authorize = function(req, res){
 	var userId = req.params.id;
-	res.redirect(authorize_url + 
-		querystring.stringify({
-      response_type: 'code',
-      client_id: client_id,
-      scope: scope,
-      state: userId,
-      redirect_uri: redirect_uri
-    })
-  );
+	// res.redirect(authorize_url +
+	// 	querystring.stringify({
+ //      response_type: 'code',
+ //      client_id: client_id,
+ //      scope: scope,
+ //      state: userId,
+ //      redirect_uri: redirect_uri
+ //    });
+ //  );
 }
 
 exports.callback = function(req, res){
