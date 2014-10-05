@@ -89,9 +89,17 @@ angular.module('drunkrawlApp')
         $scope.markers.push({
             lat: bar.location.coordinate.latitude,
             lng: bar.location.coordinate.longitude,
-            message: "My Added Marker"
+            message: "Name: "+bar.name+'\n'+
+                     "Rating: "+bar.rating+'\n'+
+                     "Address: "+bar.location.display_address+'\n'+
+                     "Phone: "+bar.display_phone,
+            icon: {
+              type: 'markerAwesome',
+              markerColor: '#FF0000',
+              iconColor: '#FFFFFF'
+            }
         });
-      })
+      });
     });
     $scope.$on("leafletDirectiveMap.click", function(event, args){
       console.log(event);
