@@ -75,19 +75,12 @@ exports.addBar = function(req, res) {
 };
 
 exports.getBars = function(req, res) {
-  // Crawl.findById(req.params.id, function(err, crawl) {
-  //   crawl.populate(itinerary.bar, {path: 'itinerary.bar', model: 'Bar'}, function(err, bar){
 
-  //   });
-  // });
   Crawl.findById(req.params.id, function(err, crawl)
         .populate('itinerary.bar')
         .exec(function (err, crawl){
           return res.json(200, crawl);
-        });
-    
-
-        
+        });       
 };
 
 exports.getBarInfo = function(req, res) {

@@ -48,23 +48,6 @@ angular.module('drunkrawlApp')
         maximumAge: 2000
       },
 
-<<<<<<< HEAD
-    function searchYelp(pos) {
-      params.ll = pos.coords.latitude+','+pos.coords.longitude;
-      params.term = 'Bars';
-      Crawls.searchYelp(params).then(function(res) {
-        if(res && !res.error) {
-          for(var i = 0; i < res.businesses.length; i++) {
-            if(res.busin/esses[i].location.coordinate) {
-              var m = L.marker({ lat: res.businesses[i].location.coordinate.latitude, lng: res.businesses[i].location.coordinate.longitude, name: res.businesses[i].name });
-              markers.addLayer(m);
-            }
-          }
-          map.addLayer(markers);
-          map.fitBounds(markers.getBounds());
-        } else {
-          toaster.pop('error', 'Oops! There was an issue', res.error.message);
-=======
       initialize: function(){
         map.on('zoomend', function(event) {
           mapFeatures.zoomChange(event);
@@ -79,7 +62,6 @@ angular.module('drunkrawlApp')
           var lng = location.coords.longitude;
           var latlng = L.latlng(lat, lng);
           map.panTo(latlng);
->>>>>>> 34ff059939dbc11e5284c6d10e2e888076faba6e
         }
 
         function onError(error){
