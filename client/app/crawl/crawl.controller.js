@@ -34,7 +34,7 @@ angular.module('drunkrawlApp')
 angular.module('drunkrawlApp')
   .controller('CrawlEditItinerary', function($scope, $http, $state, toaster, Auth, Crawls) {
     L.Icon.Default.imagePath = '/assets/images/leaflet';
-    var map = new L.Map('map', {center: new L.LatLng(39.095962936305504, -96.8115234375), zoom: 14});
+    var map = new L.Map('map', {center: new L.LatLng(39.095962936305504, -96.8115234375), zoom: 12});
     var markers = L.markerClusterGroup({ singleMarkerMode: true});
     var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
     var ggl = new L.Google('ROADMAP');
@@ -48,56 +48,57 @@ angular.module('drunkrawlApp')
         maximumAge: 2000
       },
 
+      getCurrentLocation: function() {
+        console.log('location');
+        navigator.geolocation.getCurrentPosition(mapFeatures.onSuccess, mapFeatures.onError, mapFeatures.navOptions);
+      },
       initialize: function(){
         map.on('zoomend', function(event) {
           mapFeatures.zoomChange(event);
         });
       },
 
-      trackLocation: function(){
-        $scope.watchId = navigator.geolocation.watchPosition(onSuccess, onError, navOptions)
-
-        function onSuccess(location){
-          var lat = location.coords.latitude;
-          var lng = location.coords.longitude;
-          var latlng = L.latlng(lat, lng);
-          map.panTo(latlng);
-        }
-
-        function onError(error){
-          alert('Error with Map');
-        }
+      onSuccess: function(location) {
+        console.log(location);
+        var lat = location.coords.latitude;
+        var lng = location.coords.longitude;
+        var latlng = L.latLng(lat, lng);
+        map.setView(latlng);
       },
 
-      stopTrackingLocation: function(){
+      onError: function(error) {
+        alert('Error with Map');
+      },
+
+      trackLocation: function() {
+        $scope.watchId = navigator.geolocation.watchPosition(mapFeatures.onSuccess, mapFeatures.onError, mapFeatures.onSuccess, mapFeatures.onError, mapFeatures.navOptions);
+      },
+
+      stopTrackingLocation: function() {
         navigator.geolocation.clearWatch($scope.watchId);
       },
 
-      zoomChange: function(e){
-        console.log(e);
+      zoomChange: function(e) {
         var bounds = e.target.getBounds(),
             zoom = e.target.getBoundsZoom(bounds),
             sw_lat = bounds._southWest.lat,
             sw_lng = bounds._southWest.lng,
             ne_lat = bounds._northEast.lat,
             ne_lng = bounds._northEast.lng,
-            params = {};
-            console.log(bounds);
+            params = {},
+            coords = [];
         params.bounds = sw_lat+','+sw_lng+'|'+ne_lat+','+ne_lng;
-        params.term = "bars"
-        console.log(params);
+        params.term = "bars";
         Crawls.searchYelp(params).then(function(res) {
-          console.log(res);
           if(res && !res.error) {
-            var coords = [];
+            $scope.results = res.businesses;
             for(var i = 0; i < res.businesses.length; i++) {
               if(res.businesses[i].location.coordinate) {
                 var m = L.marker({ lat: res.businesses[i].location.coordinate.latitude, lng: res.businesses[i].location.coordinate.longitude, title: res.businesses[i].name });
+                coords.push({lat: res.businesses[i].location.coordinate.latitude, lng: res.businesses[i].location.coordinate.longitude});
                 m.addTo(map);
-                coords.push(m.getLatLng());
               }
             }
-            map.addLayer(markers);
             map.fitBounds(new L.latLngBounds(coords));
           } else {
             toaster.pop('error', 'Oops! There was an issue', res.error.message);
