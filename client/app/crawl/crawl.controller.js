@@ -30,82 +30,63 @@ angular.module('drunkrawlApp')
 
 angular.module('drunkrawlApp')
   .controller('CrawlEditItinerary', function ($scope, $http, $state, toaster, Auth, Crawls, crawl) {
+   angular.extend($scope, {
+      defaults: {   
+        tileLayer: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        maxZoom: 18,
+        path: {
+            weight: 10,
+            color: '#800000',
+            opacity: 1
+        }
+      },
+      center: {
+        autoDiscover: true,
+        zoom: 12
+      },
+      markers: {
+        m1: {
+          lat: 50,
+          lng: 0,
+          icon: {
+            type: 'markerAwesome',
+            icon: 'beer',
+            markerColor: 'red',
+            iconColor: '#FFFFFF'
+          }
+        }
+      },
+      bounds: bounds
+    });
+
+   //--------------------------------------------------------//
+   //------------------  Map Event Handling  -----------------//
+   //--------------------------------------------------------//
+
+    //on map load
+    $scope.$on("leafletDirectiveMap.load", function(event, args){
+      $scope.markers.m1.lat = args.leafletEvent.target.getCenter().lat;
+      $scope.markers.m1.lng = args.leafletEvent.target.getCenter().lng;
+      console.log("clicked!");
+    });
+    console.log(leafletDirectiveMap)
+    
+    $scope.$on("leafletDirectiveMap.move", function(event, args){
+       //console.log($scope.markers);
+       console.log($scope.center);
+    });
+    $scope.$on("leafletDirectiveMap.click", function(event, args){
+      console.log(event);
+      console.log(args);
+    })
     $scope.crawl = crawl;
     $scope.crawl.selection = [];
 
     console.log($scope.crawl);
 
-    L.Icon.Default.imagePath = '/assets/images/leaflet';
-    var map = new L.Map('map', {center: new L.LatLng(39.095962936305504, -96.8115234375), zoom: 14});
-    var markers = L.markerClusterGroup({ singleMarkerMode: true});
-    var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-    var ggl = new L.Google('ROADMAP');
-    map.addLayer(ggl);
-    map.addControl(new L.Control.Layers( {'OSM':osm, 'Google':ggl}, {}));
+    $scope.findNearbyBars = function(){}
 
-    var mapFeatures = {
-      navOptions: {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 2000
-      },
-
-      initialize: function(){
-        map.on('zoomend', function(event) {
-          mapFeatures.zoomChange(event);
-        });
-        mapFeatures.getCurrentLocation();
-      },
-
-      trackLocation: function(){
-        $scope.watchId = navigator.geolocation.watchPosition(onSuccess, onError, navOptions)
-
-        function onSuccess(location){
-          var lat = location.coords.latitude;
-          var lng = location.coords.longitude;
-          var latlng = L.latlng(lat, lng);
-          map.panTo(latlng);
-        }
-
-        function onError(error){
-          alert('Error with Map');
-        }
-      },
-
-      stopTrackingLocation: function(){
-        navigator.geolocation.clearWatch($scope.watchId);
-      },
-
-      zoomChange: function(e){
-        console.log(e);
-        var bounds = e.target.getBounds(),
-            zoom = e.target.getBoundsZoom(bounds),
-            sw_lat = bounds._southWest.lat,
-            sw_lng = bounds._southWest.lng,
-            ne_lat = bounds._northEast.lat,
-            ne_lng = bounds._northEast.lng,
-            params = {};
-            console.log(bounds);
-        params.bounds = sw_lat+','+sw_lng+'|'+ne_lat+','+ne_lng;
-        params.term = "bars"
-        console.log(params);
-        Crawls.searchYelp(params).then(function(res) {
-          console.log(res);
-          if(res && !res.error) {
-            for(var i = 0; i < res.businesses.length; i++) {
-              if(res.businesses[i].location.coordinate) {
-                var m = L.marker({ lat: res.businesses[i].location.coordinate.latitude, lng: res.businesses[i].location.coordinate.longitude, name: res.businesses[i].name });
-                markers.addLayer(m);
-              }
-            }
-            m.addTo(map);
-          } else {
-            toaster.pop('error', 'Oops! There was an issue', res.error.message);
-          }
-        });
-      }
-    };
-    mapFeatures.initialize();
+//<<---------------------END MAP FUNCTIONS---------------------->>//
 
     $scope.complete = function() {
       var bar;
@@ -153,7 +134,7 @@ angular.module('drunkrawlApp')
       toaster.pop('success', 'Nice! You just added some bars to the crawl', 'Added ' + $scope.crawl.selection.length + ' bars to ' + $scope.crawl.name);
       $state.go('crawl.page', { id: crawl._id }, { reload: true });
     };
-  })
+  });
 
 angular.module('drunkrawlApp')
   .controller('CrawlPageCtrl', function ($scope, $http, Auth, toaster, Crawls, crawl) {
