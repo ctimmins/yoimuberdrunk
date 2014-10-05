@@ -52,9 +52,8 @@ angular.module('drunkrawlApp')
         console.log('location');
         navigator.geolocation.getCurrentPosition(mapFeatures.onSuccess, mapFeatures.onError, mapFeatures.navOptions);
       },
-
-      initialize: function() {
-        map.on('viewreset', function(event) {
+      initialize: function(){
+        map.on('zoomend', function(event) {
           mapFeatures.zoomChange(event);
         });
       },

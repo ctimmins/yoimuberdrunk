@@ -56,7 +56,7 @@ exports.addBar = function(req, res) {
           if (err) {
             return handleError(res, err);
           }
-          Crawls.findByIdAndUpdate(req.params.id, { $push: { itinerary: { bar: bar._id } } }, function(err, crawl) {
+          Crawl.findByIdAndUpdate(req.params.id, { $push: { itinerary: { bar: bar._id } } }, function(err, crawl) {
             if (err) {
               return handleError(res, err);
             }
@@ -64,7 +64,7 @@ exports.addBar = function(req, res) {
         });
       }
       else {
-        Crawls.findByIdAndUpdate(req.params.id, { $push: { itinerary: { bar: bar.bar_id, } } }, function(err, crawl) {
+        Crawl.findByIdAndUpdate(req.params.id, { $push: { itinerary: { bar: bar.bar_id, } } }, function(err, crawl) {
           if (err) {
             return handleError(res, err);
           }
@@ -96,7 +96,9 @@ exports.getBarByYelpID = function(req, res) {
 };
 
 exports.updateBar = function(req, res) {
-
+  Crawl.findById(req.id, function(err, crawl){
+    crawl.itinerary.fin
+  })
 };
 
 exports.removeBar = function(req, res) {
