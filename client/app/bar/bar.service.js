@@ -16,7 +16,7 @@ angular.module('drunkrawlApp')
       return Restangular.all('bars').getList();
     },
     checkBarById: function(id) {
-      return Restangular.one('check', id).get();
+      return Restangular.all('bars').one('check', id).get();
     },
     getBar: function(id) {
       return Restangular.one('bars', id).get();

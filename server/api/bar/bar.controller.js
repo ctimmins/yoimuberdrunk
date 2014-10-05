@@ -28,6 +28,15 @@ exports.create = function(req, res) {
   });
 };
 
+exports.getBarByYelpID = function(req, res) {
+  Bar.findOne({ id: req.params.id }, function(err, bar) {
+    console.log(bar);
+    if(err) { return handleError(res, err); }
+    if(!bar) { return res.json(200, {"error":{"text":"Bar not in collection"}}); }
+    return res.json(200, bar);
+  });
+};
+
 // Updates an existing bar in the DB.
 exports.update = function(req, res) {
   if(req.body._id) { delete req.body._id; }

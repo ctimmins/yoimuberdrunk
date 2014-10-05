@@ -14,8 +14,8 @@ router.delete('/:id', controller.destroy);
 
 // Crawl bars
 router.get('/:id/bars', controller.getBars);
+router.get('/:id/check/:bar_id', controller.checkBar);
 router.post('/:id/bars', controller.addBar);
-router.get('/:id/bars/:bar_id', controller.getBarByYelpID);
 router.put('/:id/bars/:bar_id', controller.updateBar);
 router.delete('/:id/bars/:bar_id', controller.removeBar);
 

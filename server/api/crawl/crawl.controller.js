@@ -46,63 +46,48 @@ exports.update = function(req, res) {
 };
 
 exports.addBar = function(req, res) {
-  for(bar in req.body.bars){
-    Bar.findOne({ id: bar.id }, function(err, bar) {
-      if (err) {
-        return handleError(res, err);
-      }
-      if (!bar) {
-        Bar.create(bar, function(err, bar) {
-          if (err) {
-            return handleError(res, err);
-          }
-          Crawl.findByIdAndUpdate(req.params.id, { $push: { itinerary: { bar: bar._id } } }, function(err, crawl) {
-            if (err) {
-              return handleError(res, err);
-            }
-          });
-        });
-      }
-      else {
-        Crawl.findByIdAndUpdate(req.params.id, { $push: { itinerary: { bar: bar.bar_id, } } }, function(err, crawl) {
-          if (err) {
-            return handleError(res, err);
-          }
-        });
-      }
+  Crawl.findByIdAndUpdate(req.params.id, { $push: { bars: { bar: req.body._id } } },
+    function(err, crawl) {
+      if(err) { return handleError(res, err); }
+      if(!crawl) { return res.send(404); }
+      return res.json(200, crawl);
     });
-  }
+};
+
+exports.removeBar = function(req, res) {
+  Crawl.findByIdAndUpdate(req.params.id, { $pull: { bars: { bar: req.params.bar_id } } },
+    function(err, crawl) {
+      if(err) { return handleError(res, err); }
+      if(!crawl) { return res.send(404); }
+      return res.json(200, crawl);
+    });
 };
 
 exports.getBars = function(req, res) {
   Crawl.findById(req.params.id).populate('bars')
     .exec(function(err, crawl) {
     if(err) { return handleError(res, err); }
-    if(!bars) { return res.json(404, res); }
+    if(!bars) { return res.send(404); }
     return res.json(200, bars);
   });
 };
 
-exports.getBarByYelpID = function(req, res) {
+exports.updateBar = function(req, res) {
+  Crawl.findById(req.params.id, function(err, crawl){
+    //crawl.itinerary.fin
+  });
+};
+
+exports.checkBar = function(req, res) {
   Crawl.findById(req.params.id).populate('bars')
     .exec(function(err, crawl) {
       if(err) { return handleError(res, err); }
-      if(!crawl) { return res.json(404, res); }
+      if(!crawl) { return res.send(404); }
       var query = _.find(crawl.bars, function(bar) {
         return bar.id = req.params.bar_id;
       });
       return res.json(200, query);
     });
-};
-
-exports.updateBar = function(req, res) {
-  Crawl.findById(req.id, function(err, crawl){
-    crawl.itinerary.fin
-  })
-};
-
-exports.removeBar = function(req, res) {
-
 };
 
 // Deletes a crawl from the DB.

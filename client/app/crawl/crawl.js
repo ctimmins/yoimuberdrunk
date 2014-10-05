@@ -19,8 +19,15 @@ angular.module('drunkrawlApp')
         controller: 'CrawlCreateCtrl'
       })
       .state('crawls.create.add', {
+        url: '/:id',
         templateUrl: 'app/crawl/views/crawl-create-02.html',
-        controller: 'CrawlEditItinerary'
+        controller: 'CrawlEditItinerary',
+        resolve: {
+          crawl: function($stateParams, Crawls) {
+            console.log($stateParams);
+            return Crawls.getCrawl($stateParams.id);
+          }
+        }
       })
       .state('crawls.page', {
         url: '/:id',

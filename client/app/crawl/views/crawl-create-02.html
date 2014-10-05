@@ -36,11 +36,14 @@
     <ul class="list-unstyled list-crawl-selection">
       <li class="selection-bar" data-drag="true" jqyoui-draggable data-jqyoui-options="{handle: 'span'}" ng-repeat="bar in crawl.selection">
         <div class="pull-left">
-          {{crawl.selection.indexOf(bar)}}
+          <!-- {{crawl.selection.indexOf(bar)}} -->
         </div>
         <h6><a ui-sref="bar.page({ id: bar._id })">{{bar.name}}</a></h6>
         <span class="glyphicon glyphicon-th-large"></span>
       </li>
     </ul>
+    <button class="btn btn-primary" ng-click="complete()">
+      Add selection to crawl
+    </button>
   </div>
 </div>

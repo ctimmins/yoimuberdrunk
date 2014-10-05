@@ -11,10 +11,7 @@ angular.module('drunkrawlApp')
 angular.module('drunkrawlApp')
   .controller('CrawlCreateCtrl', function ($scope, $http, $state, toaster, Auth, Crawls) {
     $scope.isLoggedIn = Auth.isLoggedIn();
-    $scope.addingBars = false;
-    $scope.results = [];
     $scope.crawl = {};
-    $scope.crawl.selection = [];
 
     $scope.createCrawl = function(data) {
       Crawls.create(data).then(function(res) {
@@ -22,7 +19,7 @@ angular.module('drunkrawlApp')
         if(res && !res.error) {
           $scope.addingBars = true;
           $scope.crawl._id = res._id;
-          $state.go('crawls.create.add');
+          $state.go('crawls.create.add', { id: res._id });
         } else {
           toaster.pop('error', 'Oops! There was an issue', res.error.message);
         }
@@ -32,7 +29,12 @@ angular.module('drunkrawlApp')
   });
 
 angular.module('drunkrawlApp')
-  .controller('CrawlEditItinerary', function($scope, $http, $state, toaster, Auth, Crawls) {
+  .controller('CrawlEditItinerary', function ($scope, $http, $state, toaster, Auth, Crawls, crawl) {
+    $scope.crawl = crawl;
+    $scope.crawl.selection = [];
+
+    console.log($scope.crawl);
+
     L.Icon.Default.imagePath = '/assets/images/leaflet';
     var map = new L.Map('map', {center: new L.LatLng(39.095962936305504, -96.8115234375), zoom: 12});
     var markers = L.markerClusterGroup({ singleMarkerMode: true});
@@ -56,6 +58,7 @@ angular.module('drunkrawlApp')
         map.on('zoomend', function(event) {
           mapFeatures.zoomChange(event);
         });
+        mapFeatures.getCurrentLocation();
       },
 
       onSuccess: function(location) {
@@ -99,7 +102,7 @@ angular.module('drunkrawlApp')
                 m.addTo(map);
               }
             }
-            map.fitBounds(new L.latLngBounds(coords));
+            //map.fitBounds(new L.latLngBounds(coords));
           } else {
             toaster.pop('error', 'Oops! There was an issue', res.error.message);
           }
@@ -109,13 +112,45 @@ angular.module('drunkrawlApp')
     mapFeatures.initialize();
 
     $scope.complete = function() {
+      var bar;
       for(var i = 0; i < $scope.crawl.selection.length; i++) {
-        Crawls.addBar(crawl._id, $scope.crawl.selection[i].id).then(function(res) {
+        bar = $scope.crawl.selection[i];
+        Bars.checkBarById(bar.id).then(function(res) {
+          console.log(res);
+          console.log(bar);
           if(res && !res.error) {
-            console.log(res);
+            console.log('no error');
+            scope.inCollection = true;
+            Crawls.addBar(crawl._id, bar).then(function(res) {
+              if(res && !res.error) {
+                toaster.pop('success', 'Nice, add bar', 'You just added ' + scope.bar.name);
+                scope.inCrawl = true;
+                scope.btn.class = 'btn-success';
+                scope.btn.icon = 'glyphicon-ok';
+                scope.btn.text = 'In crawl';
+              } else {
+                toaster.pop('error', 'Oops! There was an issue', res.error.message);
+              }
+            });
           } else {
-            toaster.pop('error', 'Oops! There was an error adding to the crawl', res.error.text);
-            return res.error;
+            Bars.create(bar).then(function(res) {
+              console.log(res);
+              if(res && !res.error) {
+                Crawls.addBar(crawl._id, res).then(function(res) {
+                  if(res && !res.error) {
+                    toaster.pop('success', 'Nice, add bar', 'You just added ' + scope.bar.name);
+                    scope.inCrawl = true;
+                    scope.btn.class = 'btn-success';
+                    scope.btn.icon = 'glyphicon-ok';
+                    scope.btn.text = 'In crawl';
+                  } else {
+                    toaster.pop('error', 'Oops! There was an issue', res.error.message);
+                  }
+                });
+              } else {
+                toaster.pop('error', 'Oops! There was an issue', res.error.message);
+              }
+            });
           }
         });
       }
