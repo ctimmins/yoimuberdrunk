@@ -67,9 +67,10 @@ angular.module('drunkrawlApp')
 
     $scope.markers = new Array();
     //-----color table-----//
-    
+    console.log($scope.markers);
 
- 
+
+
    //--------------------------------------------------------//
    //---------------Map Event Handling and Function----------//
    //--------------------------------------------------------//
@@ -80,16 +81,14 @@ angular.module('drunkrawlApp')
       $scope.markers.m1.lng = args.leafletEvent.target.getCenter().lng;
       console.log("clicked!");
     });
-    console.log(leafletDirectiveMap)
 
     //on map zoom or slide
     $scope.$on("leafletDirectiveMap.moveend", function(event, args){
-      $scope.currentMapBounds = getCurrentMapBounds();
-      var bars = findNearbyBars($scope.currentMapBounds);
+      var bars = getCurrentMapBounds();
       bars.businesses.foreach(function(bar){
         $scope.markers.push({
-            lat: bar.,
-            lng: leafEvent.latlng.lng,
+            lat: bar.location.coordinate.latitude,
+            lng: bar.location.coordinate.longitude,
             message: "My Added Marker"
         });
       })
@@ -102,17 +101,17 @@ angular.module('drunkrawlApp')
     $scope.crawl.selection = [];
 
     function getCurrentMapBounds(){
-      leafletData.getMap().then(function(map){
-        return map.getBounds();
+      leafletData.getMap().then(function(map) {
+        findNearbyBars(map.getBounds());
       });
     }
 
-    function findNearbyBars(bounds){
-      sw_lat = bounds._southWest.lat,
-      sw_lng = bounds._southWest.lng,
-      ne_lat = bounds._northEast.lat,
-      ne_lng = bounds._northEast.lng,
-      params = {};
+    function findNearbyBars(bounds) {
+      var sw_lat = bounds._southWest.lat,
+          sw_lng = bounds._southWest.lng,
+          ne_lat = bounds._northEast.lat,
+          ne_lng = bounds._northEast.lng,
+          params = {};
       params.bounds = sw_lat+','+sw_lng+'|'+ne_lat+','+ne_lng;
       params.term = "bars"
       Crawls.searchYelp(params).then(function(res){
