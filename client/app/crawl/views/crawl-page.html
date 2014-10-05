@@ -1,13 +1,40 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div class="container" ui-view="">
-  <header>
-    <h1>{{crawl.title}}</h1>
-    <ul class="list-inline">
-      <li>{{crawl.location}}</li>
-      <li>{{crawl.bars.length}} bars</li>
-      <li>{{crawl.startDate}}</li>
-    </ul>
-    <p>{{crawl.description}}</p>
-  </header>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <header>
+        <h1>{{crawl.name}}</h1>
+        <ul class="list-inline">
+          <li>{{crawl.location}}</li>
+          <li>{{crawl.bars.length}} bars</li>
+          <li>{{crawl.startDate}}</li>
+        </ul>
+        <p>{{crawl.description}}</p>
+      </header>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="crawl-content">
+        <ul class="list-unstyled list-bars">
+          <li class="list-bar" ui-router="bar.page({ id: bar.id })" ng-repeat="bar in crawl.itinerary">
+            <div class="row">
+              <div class="col-md-4">
+                <img ng-src="{{bar.snippet_image_url}}" alt="{{bar.name}}">
+              </div>
+            </div>
+            <h3 class="bar-name">{{bar.name}}</h3>
+            <ul class="list-inline bar-stats">
+              <li>{{bar.rating}}/5</li>
+            </ul>
+            <p class="bar-description">{{bar.snippet_text}}</p>
+            <ul class="list-inline bar-categories">
+              <li class="category" ng-repeat="category in bar.categories">{{category.tite}}</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>

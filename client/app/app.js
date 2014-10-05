@@ -4,17 +4,20 @@ angular.module('drunkrawlApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
+  'ngTouch',
   'btford.socket-io',
   'ui.router',
   'ui.bootstrap',
   'restangular',
-  'toaster'
+  'toaster',
+  'leaflet-directive'
 ])
-  .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, RestangularProvider) {
     $urlRouterProvider
       .otherwise('/');
 
     $locationProvider.html5Mode(true);
+    RestangularProvider.setBaseUrl('/api/');
     $httpProvider.interceptors.push('authInterceptor');
   })
 

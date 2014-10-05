@@ -7,6 +7,7 @@ var Bar = require('../bar/bar.model');
 // Get list of crawls
 exports.index = function(req, res) {
   Crawl.find(function (err, crawls) {
+    console.log(crawls);
     if(err) { return handleError(res, err); }
     return res.json(200, crawls);
   });
