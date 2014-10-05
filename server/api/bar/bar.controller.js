@@ -5,7 +5,17 @@ var Bar = require('./bar.model');
 
 // Get list of bars
 exports.index = function(req, res) {
-  Bar.find(function (err, bars) {
+  console.log(req.query);
+  Bar.find( function(err, bars) {
+    if(err) { return handleError(res, err); }
+    return res.json(200, bars);
+  });
+};
+
+// Get list of bars sorted
+exports.indexSort = function(req, res) {
+  Bar.find().sort({ bars: req.query.bars, dateCreated: req.query.dateCreated })
+    .exec(function (err, bars) {
     if(err) { return handleError(res, err); }
     return res.json(200, bars);
   });

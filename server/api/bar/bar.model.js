@@ -8,6 +8,7 @@ var BarSchema = new Schema({
   snippet_text: String,
   snippet_image_url: String,
   image_url: String,
+  rating_img_url: String,
   rating: String,
   review_count: Number,
   categories: [{
@@ -33,7 +34,8 @@ var BarSchema = new Schema({
   crawls: [{
     type: Schema.Types.ObjectId,
     ref: 'Bar'
-  }]
+  }],
+  dateCreated: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('Bar', BarSchema);

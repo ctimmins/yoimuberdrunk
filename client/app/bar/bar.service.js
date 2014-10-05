@@ -12,8 +12,11 @@ angular.module('drunkrawlApp')
     edit: function(id, data) {
       return Restangular.one('bars', id).put(data);
     },
-    getBars: function() {
-      return Restangular.all('bars').getList();
+    getBars: function(type) {
+      return Restangular.all('bars').getList({sort: type});
+    },
+    getSortedBars: function(query) {
+      return Restangular.all('bars').getList(query);
     },
     checkBarById: function(id) {
       return Restangular.all('bars').one('check', id).get();

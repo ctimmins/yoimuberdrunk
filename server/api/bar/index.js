@@ -6,6 +6,7 @@ var controller = require('./bar.controller');
 var router = express.Router();
 
 router.get('/', controller.index);
+router.get('/?', controller.indexSort);
 router.get('/:id', controller.show);
 router.get('/check/:id', controller.getBarByYelpID);
 router.post('/', controller.create);
