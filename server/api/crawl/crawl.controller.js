@@ -55,7 +55,7 @@ exports.addBar = function(req, res) {
           if (err) { 
             return handleError(res, err); 
           }
-          Crawls.findByIdAndUpdate(req.params.id, { $push: { itinerary: { bar: bar._id } } }, function(err, crawl) {
+          Crawl.findByIdAndUpdate(req.params.id, { $push: { itinerary: { bar: bar._id } } }, function(err, crawl) {
             if (err) { 
               return handleError(res, err); 
             }
@@ -63,7 +63,7 @@ exports.addBar = function(req, res) {
         });
       } 
       else {
-        Crawls.findByIdAndUpdate(req.params.id, { $push: { itinerary: { bar: bar.bar_id, } } }, function(err, crawl) {
+        Crawl.findByIdAndUpdate(req.params.id, { $push: { itinerary: { bar: bar.bar_id, } } }, function(err, crawl) {
           if (err) { 
             return handleError(res, err); 
           }
@@ -74,27 +74,29 @@ exports.addBar = function(req, res) {
 };
 
 exports.getBars = function(req, res) {
-  // Crawls.findById(req.params.id, function(err, crawl) {
+  // Crawl.findById(req.params.id, function(err, crawl) {
   //   crawl.populate(itinerary.bar, {path: 'itinerary.bar', model: 'Bar'}, function(err, bar){
 
   //   });
   // });
-  // Crawls.findById(req.params.id, function(err, crawl)
-  //       .populate('itinerary.bar')
-  //       .exec(function (err, crawl){
-  //         console.log(crawl.itinerary[0].bar.name)
-  //       });
+  Crawl.findById(req.params.id, function(err, crawl)
+        .populate('itinerary.bar')
+        .exec(function (err, crawl){
+          return res.json(200, crawl);
+        });
     
 
         
 };
 
 exports.getBarInfo = function(req, res) {
-
+  //Bar.findById()
 };
 
 exports.updateBar = function(req, res) {
-
+  Crawl.findById(req.id, function(err, crawl){
+    crawl.itinerary.fin
+  })
 };
 
 exports.removeBar = function(req, res) {
