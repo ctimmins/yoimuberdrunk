@@ -15,7 +15,7 @@ var BarSchema = new Schema({
     id: String
   }],
   phone_number: String,
-  id: String,
+  id: { type: String, index: true },
   is_closed: Boolean,
   location: {
     city: String,
@@ -29,7 +29,11 @@ var BarSchema = new Schema({
       longitude: String
     },
     state_code: String
-  }
+  },
+  crawls: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Bar'
+  }]
 });
 
 module.exports = mongoose.model('Bar', BarSchema);

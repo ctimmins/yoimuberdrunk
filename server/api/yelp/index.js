@@ -5,9 +5,6 @@ var controller = require('./yelp.controller');
 
 var router = express.Router();
 
-router.get('/', controller.yelpSearch);
-// router.get('/', function(req, res){
-// 	res.send("ayyyyy");
-// });
+router.get('/search', controller.yelpSearch);
 
 module.exports = router;
