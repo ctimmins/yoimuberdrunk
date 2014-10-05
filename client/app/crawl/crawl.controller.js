@@ -43,7 +43,7 @@ angular.module('drunkrawlApp')
       Crawls.searchYelp(params).then(function(res) {
         if(res && !res.error) {
           for(var i = 0; i < res.businesses.length; i++) {
-            if(res.businesses[i].location.coordinate) {
+            if(res.busin/esses[i].location.coordinate) {
               var m = L.marker({ lat: res.businesses[i].location.coordinate.latitude, lng: res.businesses[i].location.coordinate.longitude, name: res.businesses[i].name });
               markers.addLayer(m);
             }
