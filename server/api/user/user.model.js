@@ -46,10 +46,7 @@ UserSchema
   .get(function() {
     return {
       'name': this.name,
-      'role': this.role,
-      '_id': this._id,
-      'crawls': this.crawls,
-      'dateJoined': this.dateJoined
+      'role': this.role
     };
   });
 

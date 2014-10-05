@@ -75,20 +75,7 @@ Bar.find({}).remove(function() {
         },
         "state_code": "AZ"
         },
-        "crawls": [
-            {
-                name: 'test crawl',
-                descritption: 'Super awesome crawl dude'
-            },
-            {
-                name: 'Awesome crawl',
-                descritption: 'Super awesome crawl dude'
-            },
-            {
-                name: 'Berkeley crawl',
-                descritption: 'Super awesome crawl dude'
-            }
-        ]
+        "crawls": []
     },
     {
     "is_claimed": true,
@@ -414,7 +401,7 @@ Bar.find({}).remove(function() {
     "review_count": 164,
     "name": "The Davis Beer Shoppe",
     "snippet_image_url": "http://s3-media2.fl.yelpcdn.com/photo/39PtuaL0WuGYeJ-ZS5vKiw/ms.jpg",
-    "rating_img_url_small": "http://s3-media2.fl.yelpcdn.com/assets/2/www/img/a5221e66bc70/ico/stars/v1/stars_small_4_half.png",
+    "rating_img_url": "http://s3-media2.fl.yelpcdn.com/assets/2/www/img/a5221e66bc70/ico/stars/v1/stars_small_4_half.png",
     "url": "http://www.yelp.com/biz/the-davis-beer-shoppe-davis",
     "phone": "5307565212",
     "snippet_text": "Still my favorite go to spot in Davis. Friendly and knowledgable staff, great environment, awesome beer selection, and a great place that doesn't have that...",
