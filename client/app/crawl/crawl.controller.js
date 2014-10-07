@@ -30,11 +30,9 @@ angular.module('drunkrawlApp')
   });
 
 angular.module('drunkrawlApp')
-  .controller('CrawlEditItinerary', function ($scope, $http, $state, toaster, Auth, Crawls, crawl, leafletData) {
+  .controller('CrawlEditItinerary', function ($scope, $http, $state, toaster, Bars, Auth, Crawls, crawl, leafletData) {
     $scope.crawl = crawl;
-
-    console.log($scope.crawl);
-
+    console.log(crawl)
     $scope.crawl.selection = [];
 
     angular.extend($scope, {
@@ -51,76 +49,52 @@ angular.module('drunkrawlApp')
         autoDiscover: true,
         zoom: 12
       },
-      markers: {
-        m1: {
-          lat: 50,
-          lng: 0,
-          icon: {
-            type: 'markerAwesome',
-            icon: 'beer',
-            markerColor: 'red',
-            iconColor: '#FFFFFF'
-          }
+      bounds: {
+        southWest: {
+          lat:51.508742458803326,
+          lng: -0.087890625,
+        },
+        northEast: {
+          lat:51.508742458803326,
+          lng:-0.087890625,
         }
-      },
+      }
     });
 
-    $scope.markers = new Array();
-    //-----color table-----//
-    console.log($scope.markers);
-
-
-
-   //--------------------------------------------------------//
-   //---------------Map Event Handling and Function----------//
-   //--------------------------------------------------------//
-
-    //on map load
-    $scope.$on("leafletDirectiveMap.load", function(event, args){
-      $scope.markers.m1.lat = args.leafletEvent.target.getCenter().lat;
-      $scope.markers.m1.lng = args.leafletEvent.target.getCenter().lng;
-      console.log("clicked!");
-    });
+    $scope.markers = [];
 
     //on map zoom or slide
-    $scope.$on("leafletDirectiveMap.moveend", function(event, args){
-      var bars = getCurrentMapBounds();
-      bars.businesses.foreach(function(bar){
+    $scope.$on("leafletDirectiveMap.moveend", function(event, args) {
+      console.log($scope.bounds);
+      bars = findNearbyBars($scope.bounds);
+      console.log(bars);
+      bars.businesses.foreach(function(bar) {
         $scope.markers.push({
             lat: bar.location.coordinate.latitude,
             lng: bar.location.coordinate.longitude,
-            message: "Name: "+bar.name+'\n'+
-                     "Rating: "+bar.rating+'\n'+
-                     "Address: "+bar.location.display_address+'\n'+
-                     "Phone: "+bar.display_phone,
-            icon: {
-              type: 'markerAwesome',
-              markerColor: '#FF0000',
-              iconColor: '#FFFFFF'
-            }
+            message: bar.name
         });
       });
     });
-    $scope.$on("leafletDirectiveMap.click", function(event, args){
-      console.log(event);
-      console.log(args);
-    })
     $scope.crawl = crawl;
     $scope.crawl.selection = [];
 
     function getCurrentMapBounds(){
       leafletData.getMap().then(function(map) {
-        findNearbyBars(map.getBounds());
+        return findNearbyBars(map.getBounds());
       });
     }
-
+    leafletData.getMap().then(function(map) {
+      map = map;
+      findNearbyBars(map.getBounds());
+    });
     function findNearbyBars(bounds) {
-      var sw_lat = bounds._southWest.lat,
-          sw_lng = bounds._southWest.lng,
-          ne_lat = bounds._northEast.lat,
-          ne_lng = bounds._northEast.lng,
-          params = {};
-      params.bounds = sw_lat+','+sw_lng+'|'+ne_lat+','+ne_lng;
+      // var sw_lat = bounds._southWest.lat,
+      //     sw_lng = bounds._southWest.lng,
+      //     ne_lat = bounds._northEast.lat,
+      //     ne_lng = bounds._northEast.lng,
+          var params = {};
+      params.bounds = bounds.southWest.lat+','+bounds.southWest.lng+'|'+bounds.northEast.lat+','+bounds.northEast.lng;
       params.term = "bars"
       Crawls.searchYelp(params).then(function(res){
         $scope.results = res.businesses;
@@ -139,14 +113,14 @@ angular.module('drunkrawlApp')
           console.log(bar);
           if(res && !res.error) {
             console.log('no error');
-            scope.inCollection = true;
+            $scope.inCollection = true;
             Crawls.addBar(crawl._id, bar).then(function(res) {
               if(res && !res.error) {
-                toaster.pop('success', 'Nice, add bar', 'You just added ' + scope.bar.name);
-                scope.inCrawl = true;
-                scope.btn.class = 'btn-success';
-                scope.btn.icon = 'glyphicon-ok';
-                scope.btn.text = 'In crawl';
+                toaster.pop('success', 'Nice, add bar', 'You just added ' + $scope.bar.name);
+                $scope.inCrawl = true;
+                $scope.btn.class = 'btn-success';
+                $scope.btn.icon = 'glyphicon-ok';
+                $scope.btn.text = 'In crawl';
               } else {
                 toaster.pop('error', 'Oops! There was an issue', res.error.message);
               }
@@ -157,11 +131,11 @@ angular.module('drunkrawlApp')
               if(res && !res.error) {
                 Crawls.addBar(crawl._id, res).then(function(res) {
                   if(res && !res.error) {
-                    toaster.pop('success', 'Nice, add bar', 'You just added ' + scope.bar.name);
-                    scope.inCrawl = true;
-                    scope.btn.class = 'btn-success';
-                    scope.btn.icon = 'glyphicon-ok';
-                    scope.btn.text = 'In crawl';
+                    toaster.pop('success', 'Nice, add bar', 'You just added ' + $scope.bar.name);
+                    $scope.inCrawl = true;
+                    $scope.btn.class = 'btn-success';
+                    $scope.btn.icon = 'glyphicon-ok';
+                    $scope.btn.text = 'In crawl';
                   } else {
                     toaster.pop('error', 'Oops! There was an issue', res.error.message);
                   }

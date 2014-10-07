@@ -53,6 +53,7 @@ exports.update = function(req, res) {
 };
 
 exports.addBar = function(req, res) {
+  console.log(req.body);
   Crawl.findByIdAndUpdate(req.params.id, { $push: { bars: { bar: req.body._id } } },
     function(err, crawl) {
       if(err) { return handleError(res, err); }
