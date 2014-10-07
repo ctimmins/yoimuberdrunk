@@ -51,10 +51,16 @@ angular.module('drunkrawlApp')
         click: function() {
           if(scope.inCrawl) {
             console.log('remoev');
-            scope.crawl.selection.splice(scope.crawl.selection.indexOf(bar), 1);
+            scope.$apply(function() {
+              scope.crawl.selection.splice(scope.crawl.selection.indexOf(bar), 1);
+            });
+            //scope.crawl.selection.splice(scope.crawl.selection.indexOf(bar), 1);
           } else {
             console.log('add');
-            scope.crawl.selection.push(bar);
+            scope.$apply(function() {
+              scope.crawl.selection.push(bar);
+            });
+
           }
         }
       });

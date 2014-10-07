@@ -11,14 +11,16 @@ var baseUrl = 'https://api.uber.com/v1/';
 
 exports.products = function(req,res){
   var lat = req.query.lat,
-      lng = req.query.lng;
-  var qsdata = {"latitude": lat, "longitude": lng}
-  var options = {url: baseUrl+'products',
-                 qs: qsdata,
-                 headers: {Authorization: "Token "+server_token}
-               }
+      lng = req.query.lng,
+      qsdata = { "latitude": lat, "longitude": lng },
+      options = { url: baseUrl + 'products',
+                  qs: qsdata,
+                  headers: { Authorization: "Token " + server_token }
+                }
   request.get(options, function(e,r,body){
-    res.json(body);
+    if(e) return handleError(e, r);
+    if(!r) return res.send(404);
+    res.json(200, body);
   });
 };
 

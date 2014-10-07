@@ -2,7 +2,7 @@
   <div class="col-md-8">
     <h2 class="page-header">Add bars to crawl</h2>
     <!-- Map -->
-    <leaflet center="center" defaults="defaults" markers="markers" width="640" height="400"></leaflet>
+    <leaflet bounds="bounds" center="center" defaults="defaults" markers="markers" style="width: 100%;" height="400"></leaflet>
     <!-- Bar listings -->
     <div class="bar-results" ng-show="results">
       <ul class="list-unstyled list-bars">
@@ -31,10 +31,10 @@
       </ul>
     </div>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-4 selection-fixed">
     <h4>Crawl selection</h4>
     <ul class="list-unstyled list-crawl-selection" data-drop="true" data-jqyoui-options="{handle: 'span'}" jqyoui-droppable>
-      <li class="selection-bar" data-drag="true" jqyoui-draggable data-jqyoui-options ng-repeat="bar in crawl.selection">
+      <li class="selection-bar" data-drag="true" jqyoui-draggable data-jqyoui-options ng-repeat="bar in crawl.selection track by $index">
         <div class="pull-left">
           <!-- {{crawl.selection.indexOf(bar)}} -->
         </div>
