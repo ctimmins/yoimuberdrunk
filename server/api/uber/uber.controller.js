@@ -61,6 +61,11 @@ exports.timeEstimate = function(req,res){
 
 };
 
+exports.pickUp = function(req, res){
+  var url = 'https://m.uber.com/sign-up?client_id='+client_id;
+  res.redirect(url);
+}
+
 function handleError(res, err) {
   return res.json(500, err);
 }

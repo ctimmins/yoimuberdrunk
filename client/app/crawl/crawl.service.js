@@ -41,6 +41,15 @@ angular.module('drunkrawlApp')
     },
     searchYelp: function(params) {
       return Restangular.all('yelp').customGET('search', params);
+    },
+    uberPriceEstimate: function(params) {
+      return Restangular.all('uber').customGET('estimates/price', params);
+    },
+    uberTimeEstimate: function(params) {
+      return Restangular.all('uber').customGET('estimates/price', params);
+    },
+    uberDeeplink: function(params) {
+      return Restangular.all('uber').customGET('pickup', params);
     }
   };
 });

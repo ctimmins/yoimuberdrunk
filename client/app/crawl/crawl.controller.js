@@ -61,26 +61,40 @@ angular.module('drunkrawlApp')
       }
     });
 
-    $scope.markers = [];
+    $scope.markers = new Array();
+
+
+   //--------------------------------------------------------//
+   //---------------Map Event Handling and Function----------//
+   //--------------------------------------------------------//
+
+    //on map load
+    $scope.$on("leafletDirectiveMap.load", function(event, args){
+      $scope.markers.lat = args.leafletEvent.target.getCenter().lat;
+      $scope.markers.lng = args.leafletEvent.target.getCenter().lng;
+      console.log("clicked!");
+    });
 
     //on map zoom or slide
-    $scope.$on("leafletDirectiveMap.moveend", function(event, args) {
-      console.log($scope.bounds);
-      bars = findNearbyBars($scope.bounds);
-      console.log(bars);
-      bars.businesses.foreach(function(bar) {
-        $scope.markers.push({
+    $scope.$on("leafletDirectiveMap.moveend", function(event, args){
+      getCurrentMapBounds().then(function(bars){
+        bars.businesses.forEach(function(bar){
+          if (!bar.location.coordinate) return;
+          console.log(bar);
+          $scope.markers.push({
             lat: bar.location.coordinate.latitude,
             lng: bar.location.coordinate.longitude,
             message: bar.name
+          });
         });
       });
+
     });
     $scope.crawl = crawl;
     $scope.crawl.selection = [];
 
     function getCurrentMapBounds(){
-      leafletData.getMap().then(function(map) {
+      return leafletData.getMap().then(function(map) {
         return findNearbyBars(map.getBounds());
       });
     }
@@ -96,7 +110,7 @@ angular.module('drunkrawlApp')
           var params = {};
       params.bounds = bounds.southWest.lat+','+bounds.southWest.lng+'|'+bounds.northEast.lat+','+bounds.northEast.lng;
       params.term = "bars"
-      Crawls.searchYelp(params).then(function(res){
+      return Crawls.searchYelp(params).then(function(res){
         $scope.results = res.businesses;
         return res;
       });
