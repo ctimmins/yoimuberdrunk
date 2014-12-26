@@ -1,9 +1,16 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
+  <!-- <div class="header">
+    <ul class="nav nav-pills pull-right">
+      <li><a ui-sref="main">Home</a></li>
+      <li><a ui-sref="nearby">Nearby</a></li>
+      <li><a ui-sref="account">Account</a></li>
+    </ul>
+  </div> -->
   <div class="row">
     <div class="col-md-6">
-      <h4>Popular crawls</h4>
+      <h4>Popular Krawls</h4>
       <ul class="list-unstyled list-crawls">
         <li class="list-crawl" ng-repeat="crawl in crawls.popular">
           <a ui-sref="crawls.page({ id: crawl._id })">{{crawl.name}}</a>

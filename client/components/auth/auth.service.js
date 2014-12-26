@@ -5,6 +5,7 @@ angular.module('drunkrawlApp')
     var currentUser = {};
     if($cookieStore.get('token')) {
       currentUser = User.get();
+      console.log(currentUser);
     }
 
     return {
