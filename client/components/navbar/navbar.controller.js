@@ -9,6 +9,10 @@ angular.module('drunkrawlApp')
     {
       'title': 'Bars',
       'link': '/bars/explore'
+    },
+    {
+      'title': 'Near Me',
+      'link': '/'
     }];
 
     $scope.isCollapsed = true;

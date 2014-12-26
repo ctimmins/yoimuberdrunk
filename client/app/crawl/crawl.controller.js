@@ -15,6 +15,9 @@ angular.module('drunkrawlApp')
     $scope.crawl = {};
 
     $scope.createCrawl = function(data) {
+      console.log("Submitted Form Data: ");
+      console.log(data);
+      console.log("End form data");
       data.hosts = user._id;
       Crawls.create(data).then(function(res) {
         if(res && !res.error) {
